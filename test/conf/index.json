@@ -1,0 +1,27 @@
+{
+  "__root": "layout.tpl",
+  "__nav": "common/nav.tpl?menus=menus.js",
+  "__content": "content/home.tpl",
+  "title": "Home",
+  "1": "{{key}}",
+  "STR": "abc",
+  "ZERO": 0,
+  "NUM": 123,
+  "TRUE": true,
+  "FLASE": false,
+  "NULL": null,
+  "HTML": "<span style=\"font-weight:bold;\">bold</span>",
+  "2": "{{#key}}...{{/key}} and .",
+  "ARR_NUM": [1,2,3],
+  "ARR_OBJ": [{"name":"Jerry"},{"name":"Tom"}],
+  "OBJ": {
+    "chinese": 90,
+    "math": 100
+  },
+  "3": "{{^key}}...{{/key}}",
+  "LIST": [],
+  "4": "{{>key}}",
+  "_PARTIAL": "abc={{STR}} 123={{NUM}}",
+  "5": "{{{key}}}",
+  "6": "{{!comment}}"
+}

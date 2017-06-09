@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li>
+          <a href="index.html">Home</a>
+        </li>
+        <li>
+          <a href="about&#x2F;index.html">About</a>
+        </li>
+      </ul>
+    </nav>
+    <h1>Home</h1>
+    <div>
+      <ol>
+        <li>
+          <h3>{{key}}</h3>
+          <p>
+            abc:abc
+            <br />123:123
+            <br />0:0
+            <br />true:true
+            <br />false:
+            <br />null:
+            <br />func:...
+            <br />html:&lt;span style&#x3D;&quot;font-weight:bold;&quot;&gt;bold&lt;&#x2F;span&gt;
+          </p>
+        </li>
+
+        <li>
+          <h3>{{#key}}...{{/key}} and .</h3>
+          <p>
+            Array&lt;Number&gt;: [1] [2] [3]
+            <br />Array&lt;Object&gt;: [Jerry] [Tom]
+            <br />Object: Chinese=90 Math=100
+          </p>
+        </li>
+
+        <li>
+          <h3>{{^key}}...{{/key}}</h3>
+          <p>
+            []: length=0
+            <br />null: yes
+            <br />false: yes
+            <br />0: yes
+            <br />123:
+            <br />abc:
+          </p>
+        </li>
+
+        <li>
+          <h3>{{>key}}</h3>
+          <p>
+            abc=abc 123=123 </p>
+        </li>
+
+        <li>
+          <h3>{{{key}}}</h3>
+          <p>
+            html:<span style="font-weight:bold;">bold</span>
+          </p>
+        </li>
+
+        <li>
+          <h3>{{!comment}}</h3>
+          <p>
+            comment:
+          </p>
+        </li>
+      </ol>
+    </div>
+  </body>
+
+</html>
