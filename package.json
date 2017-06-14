@@ -1,6 +1,6 @@
 {
   "name": "mustache-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {

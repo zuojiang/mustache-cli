@@ -50,7 +50,7 @@ export function output({
   }
 
   if (config) {
-    return render(readTpl(config, opts), opts)
+    return compile(readTpl(config, opts), opts)
   }
 
   if (watch) {
@@ -88,7 +88,7 @@ function readData(opts) {
     if (result) {
       list.push({
         path,
-        html: render(result, opts),
+        html: compile(result, opts),
       })
     }
   }
@@ -158,21 +158,29 @@ function readTpl(config, opts) {
   return null
 }
 
-function render({
+function compile({
   tpl,
   data,
   partials
 }, opts) {
   const {
+    color,
     render,
     minify,
   } = opts
 
-  let html = render({
-    tpl,
-    data,
-    partials
-  })
+  let html
+
+  try {
+    html = render({
+      tpl,
+      data,
+      partials
+    })
+  } catch (e) {
+    console.error(e)
+    return ''
+  }
 
   if (minify) {
     html = minifier.minify(html, {
