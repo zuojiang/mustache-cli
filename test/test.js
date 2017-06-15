@@ -7,4 +7,7 @@ output({
   watch: true,
   color: true,
   print: console.log,
+  variables: {
+    debug: true,
+  }
 })

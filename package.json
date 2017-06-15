@@ -1,11 +1,12 @@
 {
   "name": "mustache-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel -d ./lib ./src",
-    "test": "babel-node ./test/test.js"
+    "test": "babel-node ./test/test.js",
+    "start": "node ./bin/cli --default-data ./test/default.js ./test"
   },
   "author": "zuojiang.wang@gmail.com",
   "license": "MIT",
@@ -13,6 +14,8 @@
     "mustache",
     "cli",
     "hogan",
+    "html",
+    "tpl",
     "template"
   ],
   "homepage": "https://github.com/zuojiang/mustache-cli#readme",

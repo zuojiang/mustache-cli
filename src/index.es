@@ -28,6 +28,7 @@ export function output({
   minify = false,
   watch = false,
   config,
+  variables,
 } = {}) {
 
   baseDir = Path.resolve(baseDir)
@@ -47,6 +48,7 @@ export function output({
     print,
     color,
     minify,
+    variables,
   }
 
   if (config) {
@@ -167,6 +169,7 @@ function compile({
     color,
     render,
     minify,
+    variables,
   } = opts
 
   let html
@@ -174,7 +177,10 @@ function compile({
   try {
     html = render({
       tpl,
-      data,
+      data: {
+        ...variables,
+        ...data,
+      },
       partials
     })
   } catch (e) {

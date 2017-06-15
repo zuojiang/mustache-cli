@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
+var Path = require('path')
 var program = require('commander');
 var pkg = require('../package.json');
 var output = require('../lib/index').default;
+
+var cwd = process.cwd()
 
 program.version(pkg.version);
 program.option('-h, --help', 'output usage information');
@@ -15,7 +18,8 @@ program.option('-o, --out-dir <dir>', 'output the rendered HTML or compiled Java
 program.option('--color', 'Enables colors on the console');
 program.option('--root-tpl <str>', 'as an entry to compile (Default: __root)');
 program.option('--tpl-prefix <str>', 'as a loading partial from a tpl file (Default: __)');
-program.option('--partial-prefix <str>', 'as a string partial (e.g. {{>partial}}), Default: _');
+program.option('--partial-prefix <str>', 'as a string partial (e.g. {{>partial}}, Default: _)');
+program.option('--default-data <js|json>', 'as default data to compile');
 program.parse(process.argv);
 
 if (program.help) {
@@ -32,6 +36,7 @@ if (program.help) {
       tplPrefix: program.tplPrefix,
       partialPrefix: program.partialPrefix,
       color: program.color,
+      variables: program.defaultData ? require(Path.join(cwd, program.defaultData)) : null,
     })
   }
 } else {
