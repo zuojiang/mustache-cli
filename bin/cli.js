@@ -30,6 +30,7 @@ if (program.help) {
     core.output({
       baseDir: program.args[i],
       print: program.silent ? undefined : console.log,
+      onError: program.silent ? function(){} : console.error,
       minify: program.minify,
       watch: program.watch,
       confDir: program.confDir,

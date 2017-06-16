@@ -12,11 +12,11 @@ export default mustache
 
 let _global = null
 
-export function setGlobalData (data) {
+export function setGlobalData(data) {
   _global = data
 }
 
-export function getGlobalData () {
+export function getGlobalData() {
   return _global
 }
 
@@ -35,6 +35,9 @@ export function output({
     partials
   }) => mustache.render(tpl, data, partials),
   print = msg => {},
+  onError = e => {
+    throw e
+  },
   color = false,
   minify = false,
   watch = false,
@@ -56,6 +59,7 @@ export function output({
     tplPrefix,
     partialPrefix,
     render,
+    onError,
     print,
     color,
     minify,
@@ -63,7 +67,12 @@ export function output({
   }
 
   if (config) {
-    return compile(readTpl(config, opts), opts)
+    try {
+      return compile(readTpl(config, opts), opts)
+    } catch (e) {
+      onError(e)
+    }
+    return ''
   }
 
   if (watch) {
@@ -80,28 +89,44 @@ export function output({
 
   readData(opts).map(({
     path,
-    html
+    html,
+    bad,
   }, index) => writeHTML(path, html, {
     ...opts,
     index,
+    bad,
   }))
 }
 
 function readData(opts) {
   const {
     confDir,
+    onError,
   } = opts
 
-  const configs = readFile(confDir, path => /\.(js|json)$/i.test(path))
+  let configs = null
+  try {
+    configs = readFile(confDir, path => /\.(js|json)$/i.test(path))
+  } catch (e) {
+    onError(e)
+  }
 
   const list = []
 
   for (let path in configs) {
-    let result = readTpl(configs[path], opts)
-    if (result) {
+    try {
+      let result = readTpl(configs[path], opts)
+      if (result) {
+        list.push({
+          path,
+          html: compile(result, opts),
+        })
+      }
+    } catch (e) {
+      onError(e)
       list.push({
         path,
-        html: compile(result, opts),
+        bad: true,
       })
     }
   }
@@ -185,19 +210,14 @@ function compile({
 
   let html
 
-  try {
-    html = render({
-      tpl,
-      data: {
-        ...variables,
-        ...data,
-      },
-      partials
-    })
-  } catch (e) {
-    console.error(e)
-    return ''
-  }
+  html = render({
+    tpl,
+    data: {
+      ...variables,
+      ...data,
+    },
+    partials
+  })
 
   if (minify) {
     html = minifier.minify(html, {
@@ -222,19 +242,29 @@ function writeHTML(path, html, opts) {
     print,
     color,
     index,
+    bad,
+    onError,
   } = opts
 
   path = Path.join(outDir, path.substr(confDir.length))
   const filePath = path.replace(/(js|json)$/ig, 'html')
   const dir = Path.dirname(filePath)
-  mkdirp.sync(dir)
-  fs.writeFileSync(filePath, html)
-
   let msg = `[${index + 1}] ${filePath}`
-  if (color) {
-    msg = clc.greenBright(clc.bold(msg))
+  try {
+    mkdirp.sync(dir)
+    fs.writeFileSync(filePath, html)
+    if (color) {
+      msg = clc.bold(msg)
+      if (bad) {
+        msg = clc.red(msg)
+      } else {
+        msg = clc.greenBright(msg)
+      }
+    }
+    print(msg)
+  } catch (e) {
+    onError(e)
   }
-  print(msg)
 }
 
 function parseParams(query, opts) {
@@ -258,7 +288,6 @@ function parseParams(query, opts) {
 
 function readFile(path, filter = () => true) {
   const stats = fs.statSync(path)
-
   if (stats.isDirectory()) {
     const list = fs.readdirSync(path)
     let map = {}
@@ -287,10 +316,5 @@ function readFile(path, filter = () => true) {
 
 function requireJS(path) {
   require.cache[path] = null
-  try {
-    return require(path)
-  } catch (e) {
-    console.error(e)
-    return null
-  }
+  return require(path)
 }

@@ -12,5 +12,6 @@ output({
   watch: true,
   color: true,
   print: console.log,
+  onError: console.error,
   variables: data,
 })
