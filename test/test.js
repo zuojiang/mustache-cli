@@ -1,5 +1,10 @@
-// import output from '../lib/index'
-import output from '../src/index'
+import { output, setGlobalData } from '../lib/index'
+
+let data = {
+  debug: true,
+}
+
+setGlobalData(data)
 
 output({
   baseDir: './test',
@@ -7,7 +12,5 @@ output({
   watch: true,
   color: true,
   print: console.log,
-  variables: {
-    debug: true,
-  }
+  variables: data,
 })

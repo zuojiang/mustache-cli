@@ -1,5 +1,7 @@
 var Path = require('path')
-var output = require('../../../lib/index').default
+var core = require('../../../lib/index')
+
+console.dir(core.getGlobalData())
 
 module.exports = {
   "__root": "layout.tpl?title=About",
@@ -12,7 +14,7 @@ module.exports = {
     }, {
       __root: 'common/box.tpl',
       boxContent: '2'
-    }].map(config => output({
+    }].map(config => core.output({
       baseDir: Path.resolve(__dirname, '../../'),
       config,
     }))

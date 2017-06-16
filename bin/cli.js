@@ -3,7 +3,7 @@
 var Path = require('path')
 var program = require('commander');
 var pkg = require('../package.json');
-var output = require('../lib/index').output;
+var core = require('../lib/index');
 
 var cwd = process.cwd()
 
@@ -23,13 +23,11 @@ program.option('--global-data <js|json>', 'as global data to compile');
 program.parse(process.argv);
 
 var data = program.globalData ? require(Path.join(cwd, program.globalData)) : null;
-for(var key in data) {
-  global[key] = data[key]
-}
+core.setGlobalData(data)
 
 if (program.help) {
   for(var i=0; i<program.args.length; i++) {
-    output({
+    core.output({
       baseDir: program.args[i],
       print: program.silent ? undefined : console.log,
       minify: program.minify,

@@ -1,12 +1,12 @@
 {
   "name": "mustache-cli",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel -d ./lib ./src",
     "test": "babel-node ./test/test.js",
-    "start": "node ./bin/cli --default-data ./test/default.js ./test"
+    "start": "node ./bin/cli --global-data ./test/default.js -o ./test/out ./test"
   },
   "author": "zuojiang.wang@gmail.com",
   "license": "MIT",

@@ -8,7 +8,18 @@ import mkdirp from 'mkdirp'
 import Watch from 'node-watch'
 import clc from 'cli-color'
 
-export default output
+export default mustache
+
+let _global = null
+
+export function setGlobalData (data) {
+  _global = data
+}
+
+export function getGlobalData () {
+  return _global
+}
+
 
 export function output({
   baseDir = '.',
@@ -32,9 +43,9 @@ export function output({
 } = {}) {
 
   baseDir = Path.resolve(baseDir)
-  confDir = resolve(baseDir, confDir, 'conf')
-  tplDir = resolve(baseDir, tplDir, 'tpl')
-  outDir = resolve(baseDir, outDir, 'out')
+  confDir = confDir ? Path.resolve(confDir) : Path.join(baseDir, 'conf')
+  tplDir = tplDir ? Path.resolve(tplDir) : Path.join(baseDir, 'tpl')
+  outDir = outDir ? Path.resolve(outDir) : Path.join(baseDir, 'out')
 
   const opts = {
     baseDir,
@@ -273,13 +284,6 @@ function readFile(path, filter = () => true) {
   return {}
 }
 
-function resolve(baseDir, dir, defaultValue) {
-  if (dir) {
-    return Path.resolve(dir)
-  } else {
-    return Path.join(baseDir, defaultValue)
-  }
-}
 
 function requireJS(path) {
   require.cache[path] = null
