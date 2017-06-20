@@ -69,6 +69,7 @@ module.exports = {
 
 ```sh
 $ mustache [OPTIONS] ./
+$ mustache -h
 ```
 
 _./out/index.html_

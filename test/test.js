@@ -14,4 +14,5 @@ output({
   print: console.log,
   onError: console.error,
   variables: data,
+  ext: 'htm',
 })

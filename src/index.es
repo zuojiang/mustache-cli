@@ -29,6 +29,7 @@ export function output({
   rootTpl = '__root',
   tplPrefix = '__',
   partialPrefix = '_',
+  ext = 'html',
   render = ({
     tpl,
     data,
@@ -58,6 +59,7 @@ export function output({
     rootTpl,
     tplPrefix,
     partialPrefix,
+    ext,
     render,
     onError,
     print,
@@ -89,9 +91,9 @@ export function output({
 
   readData(opts).map(({
     path,
-    html,
+    text,
     bad,
-  }, index) => writeHTML(path, html, {
+  }, index) => writeHTML(path, text, {
     ...opts,
     index,
     bad,
@@ -119,7 +121,7 @@ function readData(opts) {
       if (result) {
         list.push({
           path,
-          html: compile(result, opts),
+          text: compile(result, opts),
         })
       }
     } catch (e) {
@@ -206,11 +208,10 @@ function compile({
     render,
     minify,
     variables,
+    ext,
   } = opts
 
-  let html
-
-  html = render({
+  let text = render({
     tpl,
     data: {
       ...variables,
@@ -219,23 +220,25 @@ function compile({
     partials
   })
 
-  if (minify) {
-    html = minifier.minify(html, {
-      removeComments: true,
-      collapseWhitespace: true,
-      collapseBooleanAttributes: true,
-      removeRedundantAttributes: true,
-      removeEmptyAttributes: true,
-      caseSensitive: true,
-    })
-  } else {
-    html = pretty(html)
+  if (/^(html|htm)$/i.test(ext)) {
+    if (minify) {
+      text = minifier.minify(text, {
+        removeComments: true,
+        collapseWhitespace: true,
+        collapseBooleanAttributes: true,
+        removeRedundantAttributes: true,
+        removeEmptyAttributes: true,
+        caseSensitive: true,
+      })
+    } else {
+      text = pretty(text)
+    }
   }
 
-  return html
+  return text
 }
 
-function writeHTML(path, html, opts) {
+function writeHTML(path, text, opts) {
   const {
     confDir,
     outDir,
@@ -244,15 +247,16 @@ function writeHTML(path, html, opts) {
     index,
     bad,
     onError,
+    ext,
   } = opts
 
   path = Path.join(outDir, path.substr(confDir.length))
-  const filePath = path.replace(/(js|json)$/ig, 'html')
+  const filePath = path.replace(/(js|json)$/ig, ext)
   const dir = Path.dirname(filePath)
   let msg = `[${index + 1}] ${filePath}`
   try {
     mkdirp.sync(dir)
-    fs.writeFileSync(filePath, html)
+    fs.writeFileSync(filePath, text)
     if (color) {
       msg = clc.bold(msg)
       if (bad) {
