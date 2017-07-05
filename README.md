@@ -5,6 +5,10 @@
 Mustache's CLI interface.
 
 ### Usage
+```sh
+$ npm install mustache-cli --global
+$ mustache -h
+```
 
 _./tpl/layout.tpl_
 
@@ -65,11 +69,6 @@ module.exports = {
     return page1 + page2
   }
 }
-```
-
-```sh
-$ mustache [OPTIONS] ./
-$ mustache -h
 ```
 
 _./out/index.html_

@@ -8,7 +8,9 @@ var core = require('../lib/index');
 
 var cwd = process.cwd()
 
+program.name('mustache');
 program.version(pkg.version);
+program.usage('[options] [dir]')
 program.option('-h, --help', 'output usage information');
 program.option('-m, --minify', 'compile minify HTML output');
 program.option('-s, --silent', 'do not output logs');
@@ -22,8 +24,14 @@ program.option('--color', 'enables colors on the console');
 program.option('--root-tpl <str>', 'as an entry to compile (Default: __root)');
 program.option('--tpl-prefix <str>', 'as a loading partial from a tpl file (Default: __)');
 program.option('--partial-prefix <str>', 'as a string partial (e.g. {{>partial}}, Default: _)');
-program.option('--global-data <js|json>', 'as global data to compile');
+program.option('--global-data <js|json>', 'the file as global data to compile');
 program.parse(process.argv);
+program.on('--help', function(){
+  console.log('\nExamples:\n');
+  console.log('   mastche --color ./');
+  console.log('   cat data.json | mastche --pipe > index.html');
+  console.log('');
+});
 
 if (program.help) {
   var data = program.globalData ? require(Path.join(cwd, program.globalData)) : null;
