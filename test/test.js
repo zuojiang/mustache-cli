@@ -9,8 +9,9 @@ setGlobalData(data)
 output({
   baseDir: './test',
   // minify: true,
-  watch: true,
-  color: true,
+  // pretty: true,
+  // watch: true,
+  // color: true,
   print: console.log,
   onError: console.error,
   variables: data,

@@ -2,7 +2,7 @@ import fs from 'fs'
 import Url from 'url'
 import Path from 'path'
 import mustache from 'mustache'
-import pretty from 'pretty'
+import Pretty from 'pretty'
 import minifier from 'html-minifier'
 import mkdirp from 'mkdirp'
 import Watch from 'node-watch'
@@ -19,7 +19,6 @@ export function setGlobalData(data) {
 export function getGlobalData() {
   return _global
 }
-
 
 export function output({
   baseDir = '.',
@@ -41,6 +40,7 @@ export function output({
   },
   color = false,
   minify = false,
+  pretty = false,
   watch = false,
   config,
   variables,
@@ -65,6 +65,7 @@ export function output({
     print,
     color,
     minify,
+    pretty,
     variables,
   }
 
@@ -207,6 +208,7 @@ function compile({
     color,
     render,
     minify,
+    pretty,
     variables,
     ext,
   } = opts
@@ -220,21 +222,18 @@ function compile({
     partials
   })
 
-  if (/^(html|htm)$/i.test(ext)) {
-    if (minify) {
-      text = minifier.minify(text, {
-        removeComments: true,
-        collapseWhitespace: true,
-        collapseBooleanAttributes: true,
-        removeRedundantAttributes: true,
-        removeEmptyAttributes: true,
-        caseSensitive: true,
-      })
-    } else {
-      text = pretty(text)
-    }
+  if (minify) {
+    text = minifier.minify(text, {
+      removeComments: true,
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      removeRedundantAttributes: true,
+      removeEmptyAttributes: true,
+      caseSensitive: true,
+    })
+  } else if (pretty) {
+    text = Pretty(text)
   }
-
   return text
 }
 
