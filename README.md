@@ -7,7 +7,7 @@ Mustache's CLI interface.
 ### Usage
 ```sh
 $ npm install mustache-cli --global
-$ mustache -h
+$ mustache-cli -h
 ```
 
 _./tpl/layout.tpl_

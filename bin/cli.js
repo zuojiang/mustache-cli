@@ -29,7 +29,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var cwd = process.cwd();
 
-_commander2.default.name('mustache');
+_commander2.default.name('mustache-cli');
 _commander2.default.version('\n  mustache version: ' + require('mustache/package.json').version + '\n  mustache-cli version: ' + require('../package.json').version + '\n');
 _commander2.default.usage('[options] [dir]');
 _commander2.default.option('-h, --help', 'output usage information');

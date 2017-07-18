@@ -1,6 +1,6 @@
 {
   "name": "mustache-cli",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "url": "git+https://github.com/zuojiang/mustache-cli.git"
   },
   "bin": {
-    "mustache": "./bin/cli.js"
+    "mustache-cli": "./bin/cli.js"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

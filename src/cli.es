@@ -12,7 +12,7 @@ import {
 
 const cwd = process.cwd()
 
-program.name('mustache')
+program.name('mustache-cli')
 program.version(`
   mustache version: ${require('mustache/package.json').version}
   mustache-cli version: ${require('../package.json').version}
