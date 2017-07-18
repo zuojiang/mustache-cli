@@ -5,8 +5,8 @@ console.dir(core.getGlobalData())
 
 module.exports = {
   "__root": "layout.tpl?title=About",
-  "__nav": "common/nav.tpl?menus=menus.js",
-  "__content": "content/about.tpl",
+  "__nav": "./test/tpl/common/nav.tpl?menus=menus.js",
+  "__content": Path.join(__dirname, "../../tpl/content/about.tpl"),
   "boxs": function(){
     return [{
       __root: 'common/box.tpl',
@@ -14,9 +14,11 @@ module.exports = {
     }, {
       __root: 'common/box.tpl',
       boxContent: '2'
-    }].map(config => core.output({
-      baseDir: Path.resolve(__dirname, '../../'),
-      config,
-    }))
+    }].map(function(config){
+      return core.output({
+        baseDir: Path.resolve(__dirname, '../../'),
+        config: config,
+      })
+  })
   }
 }

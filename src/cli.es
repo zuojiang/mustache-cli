@@ -5,6 +5,8 @@ import fs from 'fs'
 import program from 'commander'
 import stdin from 'stdin'
 import mkdirp from 'mkdirp'
+import clc from 'cli-color'
+import pkg from '../package.json'
 import {
   output,
   setGlobalData,
@@ -12,10 +14,10 @@ import {
 
 const cwd = process.cwd()
 
-program.name('mustache-cli')
+program.name(pkg.name)
 program.version(`
   mustache version: ${require('mustache/package.json').version}
-  mustache-cli version: ${require('../package.json').version}
+  ${pkg.name} version: ${pkg.version}
 `)
 program.usage('[options] [dir]')
 program.option('-h, --help', 'output usage information')
@@ -38,15 +40,32 @@ program.option('--global-data <path>', 'the file as global data to compile (*.js
 program.parse(process.argv)
 program.on('--help', function(){
   console.log(`\nExamples:\n
-   mastche --color ./
-   mastche -C data.json -O index.html ./src
-   cat data.json | mastche --pipe > index.html
-   `)
+
+  # Default directory structure:
+    src/
+    ├── conf/*.js(on)
+    ├── out/*.html
+    └── tpl/*.tpl
+
+  # Render all files:
+  $ ${pkg.name} --color ./src
+
+  # Render a single file:
+  $ ${pkg.name} -C data.json -O index.html ./src
+
+  # Pipe mode:
+  $ cat data.json | ${pkg.name} --pipe ./src > index.html
+
+  # Get more help:
+    ${pkg.homepage}
+`)
 })
 
 if (program.help) {
-  const data = program.globalData ? require(Path.join(cwd, program.globalData)) : null
-  setGlobalData(data)
+  if (program.globalData) {
+    setGlobalData(require(Path.join(cwd, program.globalData)))
+  }
+
   const opts = {
     confDir: program.confDir,
     tplDir: program.tplDir,
@@ -61,7 +80,6 @@ if (program.help) {
     watch: program.watch,
     color: program.color,
     ext: program.extension,
-    variables: data,
   }
 
   if (program.conf) {
@@ -72,7 +90,7 @@ if (program.help) {
         baseDir: program.args[0],
         watch: false,
         color: false,
-        config: config,
+        config,
       })
       if (program.out) {
         const outFile = Path.resolve(program.out)
@@ -80,7 +98,7 @@ if (program.help) {
         fs.writeFileSync(outFile, text)
         console.log(outFile)
       } else {
-        console.log(text)
+        process.stdout.write(text)
       }
     })()
   } else if (program.pipe) {
@@ -89,13 +107,13 @@ if (program.help) {
         const text = output({
           ...opts,
           baseDir: program.args[0],
-          print: function(){},
-          onError: function(e){
+          print(){},
+          onError(e){
             process.stderr.write(e.toString())
           },
           watch: false,
           color: false,
-          config: config,
+          config,
         })
         process.stdout.write(text)
       })

@@ -43,7 +43,6 @@ export function output({
   pretty = false,
   watch = false,
   config,
-  variables,
 } = {}) {
 
   baseDir = Path.resolve(baseDir)
@@ -66,7 +65,6 @@ export function output({
     color,
     minify,
     pretty,
-    variables,
   }
 
   if (config) {
@@ -139,7 +137,6 @@ function readData(opts) {
 
 function readTpl(config, opts) {
   const {
-    tplDir,
     rootTpl,
     tplPrefix,
     partialPrefix,
@@ -158,8 +155,8 @@ function readTpl(config, opts) {
         pathname,
         query
       } = Url.parse(value, true)
-      pathname = Path.join(tplDir, pathname)
-      tpl = readFile(pathname)[pathname]
+
+      tpl = readPartial(pathname, opts)
 
       data = {
         ...data,
@@ -173,8 +170,7 @@ function readTpl(config, opts) {
         query
       } = Url.parse(value, true)
 
-      pathname = Path.join(tplDir, pathname)
-      partials[partial] = readFile(pathname)[pathname]
+      partials[partial] = readPartial(pathname, opts)
 
       data = {
         ...data,
@@ -209,14 +205,13 @@ function compile({
     render,
     minify,
     pretty,
-    variables,
     ext,
   } = opts
 
   let text = render({
     tpl,
     data: {
-      ...variables,
+      ..._global,
       ...data,
     },
     partials
@@ -320,4 +315,18 @@ function readFile(path, filter = () => true) {
 function requireJS(path) {
   require.cache[path] = null
   return require(path)
+}
+
+function readPartial(pathname, opts) {
+  const {
+    tplDir,
+  } = opts
+
+  if (/^\.{1,2}/.test(pathname)) {
+    pathname = Path.resolve(pathname)
+  } else if (!Path.isAbsolute(pathname)) {
+    pathname = Path.join(tplDir, pathname)
+  }
+
+  return readFile(pathname)[pathname]
 }

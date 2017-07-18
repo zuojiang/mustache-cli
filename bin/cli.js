@@ -23,14 +23,22 @@ var _mkdirp = require('mkdirp');
 
 var _mkdirp2 = _interopRequireDefault(_mkdirp);
 
+var _cliColor = require('cli-color');
+
+var _cliColor2 = _interopRequireDefault(_cliColor);
+
+var _package = require('../package.json');
+
+var _package2 = _interopRequireDefault(_package);
+
 var _index = require('../lib/index');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var cwd = process.cwd();
 
-_commander2.default.name('mustache-cli');
-_commander2.default.version('\n  mustache version: ' + require('mustache/package.json').version + '\n  mustache-cli version: ' + require('../package.json').version + '\n');
+_commander2.default.name(_package2.default.name);
+_commander2.default.version('\n  mustache version: ' + require('mustache/package.json').version + '\n  ' + _package2.default.name + ' version: ' + _package2.default.version + '\n');
 _commander2.default.usage('[options] [dir]');
 _commander2.default.option('-h, --help', 'output usage information');
 _commander2.default.option('-m, --minify', 'compile minify HTML output');
@@ -51,12 +59,14 @@ _commander2.default.option('--partial-prefix <str>', 'as a string partial (e.g. 
 _commander2.default.option('--global-data <path>', 'the file as global data to compile (*.js or *.json)');
 _commander2.default.parse(process.argv);
 _commander2.default.on('--help', function () {
-  console.log('\nExamples:\n\n   mastche --color ./\n   mastche -C data.json -O index.html ./src\n   cat data.json | mastche --pipe > index.html\n   ');
+  console.log('\nExamples:\n\n\n  # Default directory structure:\n    src/\n    \u251C\u2500\u2500 conf/*.js(on)\n    \u251C\u2500\u2500 out/*.html\n    \u2514\u2500\u2500 tpl/*.tpl\n\n  # Render all files:\n  $ ' + _package2.default.name + ' --color ./src\n\n  # Render a single file:\n  $ ' + _package2.default.name + ' -C data.json -O index.html ./src\n\n  # Pipe mode:\n  $ cat data.json | ' + _package2.default.name + ' --pipe ./src > index.html\n\n  # Get more help:\n    ' + _package2.default.homepage + '\n');
 });
 
 if (_commander2.default.help) {
-  var data = _commander2.default.globalData ? require(_path2.default.join(cwd, _commander2.default.globalData)) : null;
-  (0, _index.setGlobalData)(data);
+  if (_commander2.default.globalData) {
+    (0, _index.setGlobalData)(require(_path2.default.join(cwd, _commander2.default.globalData)));
+  }
+
   var opts = {
     confDir: _commander2.default.confDir,
     tplDir: _commander2.default.tplDir,
@@ -70,8 +80,7 @@ if (_commander2.default.help) {
     pretty: _commander2.default.pretty,
     watch: _commander2.default.watch,
     color: _commander2.default.color,
-    ext: _commander2.default.extension,
-    variables: data
+    ext: _commander2.default.extension
   };
 
   if (_commander2.default.conf) {
@@ -89,7 +98,7 @@ if (_commander2.default.help) {
         _fs2.default.writeFileSync(outFile, text);
         console.log(outFile);
       } else {
-        console.log(text);
+        process.stdout.write(text);
       }
     })();
   } else if (_commander2.default.pipe) {
@@ -101,6 +110,7 @@ if (_commander2.default.help) {
         onError: function onError(e) {
           process.stderr.write(e.toString());
         },
+
         watch: false,
         color: false,
         config: config
