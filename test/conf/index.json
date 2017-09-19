@@ -1,7 +1,7 @@
 {
-  "__root": "layout.tpl",
-  "__nav": "common/nav.tpl?menus=menus.js",
-  "__content": "content/home.tpl",
+  "__root": "layout.mustache",
+  "__nav": "common/nav.mustache?menus=menus.js",
+  "__content": "content/home.mustache",
   "title": "Home",
   "1": "{{key}}",
   "STR": "abc",

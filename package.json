@@ -1,17 +1,18 @@
 {
   "name": "mustache-cli",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {
-    "start": "npm-run-all build-*",
-    "test": "npm-run-all test-*",
-    "build-lib": "babel -o ./lib/index.js ./src/index.es",
-    "build-cli": "babel -o ./bin/cli.js ./src/cli.es",
-    "test-lib": "babel-node ./test/test.js",
-    "test-cli": "node ./bin/cli -p --color --global-data ./test/default.js -o ./test/out -e htm ./test",
-    "test-file": "node ./bin/cli -C ./test/conf/index.json -O ./test/out/index.htm -m ./test",
-    "test-pipe": "cat ./test/conf/index.json | node ./bin/cli --pipe -p ./test > ./test/out/index.htm"
+    "test": "npm-run-all test:*",
+    "compile": "npm-run-all compile:*",
+    "compile:lib": "babel -d ./lib --ignore 'cli.es' ./src",
+    "compile:cli": "babel -o ./bin/cli.js ./src/cli.es",
+    "test:lib": "babel-node ./test/test.js",
+    "test:cli": "node ./bin/cli -p --color --global-data ./test/default.js -o ./test/out -e htm ./test",
+    "test:file": "node ./bin/cli -C ./test/conf/index.json -O ./test/out/index.htm -m ./test",
+    "test:pipe": "cat ./test/conf/index.json | node ./bin/cli --pipe -p ./test > ./test/out/index.htm",
+    "server": "babel-node ./test/server.js"
   },
   "preferGlobal": true,
   "author": {
@@ -40,6 +41,7 @@
     "babel-core": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "express": "^4.15.4",
     "npm-run-all": "^4.0.2"
   },
   "dependencies": {
