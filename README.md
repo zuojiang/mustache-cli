@@ -50,6 +50,7 @@ const output = require('mustache-cli').output
 
 module.exports = function(opts){
   return {
+    __file: 'multi/index.html',
     __root: 'layout.mustache',
     _tpl: '{{{html}}}',
     title: 'Multi',
@@ -92,7 +93,7 @@ _./out/index.html_
 ```
 
 
-_./out/multi.html_
+_./out/multi/index.html_
 ```html
 <!DOCTYPE html>
 <html>
@@ -145,6 +146,7 @@ app.listen(3000)
 * `tplDir`: (Default: `./tpl`)
 * `outDir`: (Default: `./out`)
 * `rootTpl`: (Default: `__root`)
+* `outFile`: (Default: `__file`, Since: _2.2.0+_)
 * `tplPrefix`: (Default: `__`)
 * `partialPrefix`: (Default: `_`)
 * `ext`: (Default: `html`)

@@ -27,6 +27,7 @@ export function output(config, opts) {
     tplDir,
     outDir,
     rootTpl = '__root',
+    outFile = '__file',
     tplPrefix = '__',
     partialPrefix = '_',
     ext = 'html',
@@ -61,6 +62,7 @@ export function output(config, opts) {
     tplDir,
     outDir,
     rootTpl,
+    outFile,
     tplPrefix,
     partialPrefix,
     ext,
@@ -95,6 +97,7 @@ export function output(config, opts) {
 
   readData(opts).map(({
     path,
+    filePath,
     text,
     bad,
   }, index) => writeHTML(path, text, {
@@ -107,6 +110,8 @@ export function output(config, opts) {
 function readData(opts) {
   const {
     confDir,
+    outDir,
+    outFile,
     onError,
   } = opts
 
@@ -120,11 +125,16 @@ function readData(opts) {
   const list = []
 
   for (let path in configs) {
+    let config = configs[path]
     try {
-      let result = readTpl(configs[path], opts)
+      let result = readTpl(config, opts)
       if (result) {
+        let filePath = config[outFile]
+        if (filePath && !Path.isAbsolute(filePath)) {
+          filePath = Path.join(outDir, filePath)
+        }
         list.push({
-          path,
+          path: filePath || path,
           text: compile(result, opts),
         })
       }
@@ -143,6 +153,7 @@ function readData(opts) {
 function readTpl(config, opts) {
   const {
     rootTpl,
+    outFile,
     tplPrefix,
     partialPrefix,
   } = opts
@@ -155,6 +166,9 @@ function readTpl(config, opts) {
 
   for (let key in config) {
     let value = config[key]
+    if (outFile && key === outFile) {
+      continue
+    }
     if (key === rootTpl) {
       let {
         pathname,
@@ -237,7 +251,7 @@ function compile({
   return text
 }
 
-function writeHTML(path, text, opts) {
+function writeHTML(filePath, text, opts) {
   const {
     confDir,
     outDir,
@@ -249,8 +263,10 @@ function writeHTML(path, text, opts) {
     ext,
   } = opts
 
-  path = Path.join(outDir, path.substr(confDir.length))
-  const filePath = path.replace(/(js|json)$/ig, ext)
+  if (filePath.indexOf(confDir) === 0) {
+    filePath = Path.join(outDir, filePath.substr(confDir.length))
+    filePath = filePath.replace(/(js|json)$/ig, ext)
+  }
   const dir = Path.dirname(filePath)
   let msg = `[${index + 1}] ${filePath}`
   try {

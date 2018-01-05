@@ -6,8 +6,8 @@ console.dir(core.getGlobalData())
 module.exports = function(opts){
   return {
     "__root": "layout.mustache?title=About",
-    "__nav": "./test/tpl/common/nav.mustache?menus=menus.js",
-    "__content": Path.join(__dirname, "../../tpl/content/about.mustache"),
+    "__nav": "common/nav.mustache?menus=menus.js",
+    "__content": "content/about.mustache",
     "boxs": function(){
       return [{
         __root: 'common/box.mustache',

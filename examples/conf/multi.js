@@ -3,6 +3,7 @@ const output = require('../../lib/index').output
 
 module.exports = function(opts){
   return {
+    __file: 'multi/index.html',
     __root: 'layout.mustache',
     _tpl: '{{{html}}}',
     title: 'Multi',

@@ -20,10 +20,7 @@ export function renderFile (options = {}) {
       }
 
       try {
-        const html = output({
-          ...options,
-          config: data,
-        })
+        const html = output(data, options)
         next(null, html)
       } catch (e) {
         next(e)
