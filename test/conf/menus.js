@@ -3,11 +3,11 @@ var Path = require('path')
 var menus = [
   {
     "title": "Home",
-    "url": "index.html"
+    "url": "index.htm"
   },
   {
     "title": "About",
-    "url": "about/index.html"
+    "url": "about/index.htm"
   }
 ]
 

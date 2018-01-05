@@ -72,7 +72,7 @@ export function output(config, opts) {
     pretty,
   }
 
-  if (config && opts) {
+  if (config) {
     try {
       return compile(readTpl(config, opts), opts)
     } catch (e) {

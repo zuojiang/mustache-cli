@@ -134,6 +134,33 @@ app.use((req, res) => {
 app.listen(3000)
 ```
 
+### API
+
+#### `output(config[, options])`
+
+##### options:
+
+* `baseDir`: (Default: `.`)
+* `confDir`: (Default: `./conf`)
+* `tplDir`: (Default: `./tpl`)
+* `outDir`: (Default: `./out`)
+* `rootTpl`: (Default: `__root`)
+* `tplPrefix`: (Default: `__`)
+* `partialPrefix`: (Default: `_`)
+* `ext`: (Default: `html`)
+* `render`: (Default: `mustache.render`)
+* `print`
+* `onError`
+* `color`: (Default: `false`)
+* `minify`: (Default: `false`)
+* `pretty`: (Default: `false`)
+* `watch`: (Default: `false`)
+* <del>`config`</del>
+
+#### `setGlobalData(data)`
+
+#### `getGlobalData`
+
 ### License
 
 MIT
