@@ -47,28 +47,31 @@ _./conf/index.json_
 _./conf/multi.js_
 ```js
 const output = require('mustache-cli').output
-module.exports = {
-  __root: 'layout.mustache',
-  _tpl: '{{{html}}}',
-  title: 'Multi',
-  html: function(){
-    const page1 = output({
-      config: {
+
+module.exports = function(opts){
+  return {
+    __root: 'layout.mustache',
+    _tpl: '{{{html}}}',
+    title: 'Multi',
+    html: function(){
+      const page1 = output({
         __root: 'page.mustache',
         _content: '<p>page1</p>',
         title: this.title,
-      }
-    })
-    const page2 = output({
-      config: {
+      }, opts)
+      const page2 = output({
         __root: 'page.mustache',
         _content: '<p>page2</p>',
         title: this.title,
-      }
-    })
-    return page1 + page2
+      }, opts)
+      return page1 + page2
+    }
   }
 }
+```
+
+```sh
+$ mustache-cli -p --color ./
 ```
 
 _./out/index.html_

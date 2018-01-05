@@ -1,0 +1,6 @@
+{
+    "__root": "layout.mustache",
+    "__tpl": "page.mustache",
+    "_content": "<strong>Hello World</strong>",
+    "title": "Home"
+}

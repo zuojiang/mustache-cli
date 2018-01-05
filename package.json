@@ -1,6 +1,6 @@
 {
   "name": "mustache-cli",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "compile:cli": "babel -o ./bin/cli.js ./src/cli.es",
     "test:lib": "babel-node ./test/test.js",
     "test:cli": "node ./bin/cli -p --color --global-data ./test/default.js -o ./test/out -e htm ./test",
+    "test:examples": "node ./bin/cli -p --color ./examples",
     "test:file": "node ./bin/cli -C ./test/conf/index.json -O ./test/out/index.htm -m ./test",
     "test:pipe": "cat ./test/conf/index.json | node ./bin/cli --pipe -p ./test > ./test/out/index.htm",
     "server": "babel-node ./test/server.js"

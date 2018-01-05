@@ -20,37 +20,42 @@ export function getGlobalData() {
   return _global
 }
 
-export function output({
-  baseDir = '.',
-  confDir,
-  tplDir,
-  outDir,
-  rootTpl = '__root',
-  tplPrefix = '__',
-  partialPrefix = '_',
-  ext = 'html',
-  render = ({
-    tpl,
-    data,
-    partials
-  }) => mustache.render(tpl, data, partials),
-  print = msg => {},
-  onError = e => {
-    throw e
-  },
-  color = false,
-  minify = false,
-  pretty = false,
-  watch = false,
-  config,
-} = {}) {
+export function output(config, opts) {
+  let {
+    baseDir = '.',
+    confDir,
+    tplDir,
+    outDir,
+    rootTpl = '__root',
+    tplPrefix = '__',
+    partialPrefix = '_',
+    ext = 'html',
+    render = ({
+      tpl,
+      data,
+      partials
+    }) => mustache.render(tpl, data, partials),
+    print = msg => {},
+    onError = e => {
+      throw e
+    },
+    color = false,
+    minify = false,
+    pretty = false,
+    watch = false,
+    config: _config,
+  } = (opts || config)
+
+  if (!opts) {
+    config = _config
+  }
 
   baseDir = Path.resolve(baseDir)
   confDir = confDir ? Path.resolve(confDir) : Path.join(baseDir, 'conf')
   tplDir = tplDir ? Path.resolve(tplDir) : Path.join(baseDir, 'tpl')
   outDir = outDir ? Path.resolve(outDir) : Path.join(baseDir, 'out')
 
-  const opts = {
+  opts = {
     baseDir,
     confDir,
     tplDir,
@@ -67,7 +72,7 @@ export function output({
     pretty,
   }
 
-  if (config) {
+  if (config && opts) {
     try {
       return compile(readTpl(config, opts), opts)
     } catch (e) {
@@ -107,7 +112,7 @@ function readData(opts) {
 
   let configs = null
   try {
-    configs = readFile(confDir, path => /\.(js|json)$/i.test(path))
+    configs = readFile(confDir, path => /\.(js|json)$/i.test(path), opts)
   } catch (e) {
     onError(e)
   }
@@ -275,7 +280,7 @@ function parseParams(query, opts) {
   for (let key in query) {
     let value = query[key]
     if (/\.(js|json)$/i.test(value)) {
-      data[key] = requireJS(Path.join(confDir, value))
+      data[key] = requireJS(Path.join(confDir, value), opts)
     } else {
       data[key] = value
     }
@@ -284,7 +289,7 @@ function parseParams(query, opts) {
   return data
 }
 
-function readFile(path, filter = () => true) {
+function readFile(path, filter = () => true, opts) {
   const stats = fs.statSync(path)
   if (stats.isDirectory()) {
     const list = fs.readdirSync(path)
@@ -292,14 +297,14 @@ function readFile(path, filter = () => true) {
     list.forEach(filename => {
       map = {
         ...map,
-        ...readFile(Path.join(path, filename), filter)
+        ...readFile(Path.join(path, filename), filter, opts)
       }
     })
     return map
   } else if (stats.isFile() && filter(path)) {
     let content
     if (/\.(js|json)$/i.test(path)) {
-      content = requireJS(path)
+      content = requireJS(path, opts)
     } else {
       content = fs.readFileSync(path).toString()
     }
@@ -312,9 +317,13 @@ function readFile(path, filter = () => true) {
 }
 
 
-function requireJS(path) {
+function requireJS(path, opts) {
   require.cache[path] = null
-  return require(path)
+  const data = require(path)
+  if (typeof data === 'function' && data.length > 0) {
+    return data(opts)
+  }
+  return data
 }
 
 function readPartial(pathname, opts) {
@@ -328,5 +337,5 @@ function readPartial(pathname, opts) {
     pathname = Path.join(tplDir, pathname)
   }
 
-  return readFile(pathname)[pathname]
+  return readFile(pathname, undefined, opts)[pathname]
 }
