@@ -7,6 +7,7 @@ import minifier from 'html-minifier'
 import mkdirp from 'mkdirp'
 import Watch from 'node-watch'
 import clc from 'cli-color'
+import lang from 'lodash/lang'
 
 export default mustache
 
@@ -27,7 +28,6 @@ export function output(config, opts) {
     tplDir,
     outDir,
     rootTpl = '__root',
-    outFile = '__file',
     tplPrefix = '__',
     partialPrefix = '_',
     ext = 'html',
@@ -40,10 +40,13 @@ export function output(config, opts) {
     onError = e => {
       throw e
     },
+    watch = false,
     color = false,
     minify = false,
     pretty = false,
-    watch = false,
+    outFile = '__file',
+    forceMinify = '__minify',
+    forcePretty = '__pretty',
     config: _config,
   } = (opts || config)
 
@@ -62,7 +65,6 @@ export function output(config, opts) {
     tplDir,
     outDir,
     rootTpl,
-    outFile,
     tplPrefix,
     partialPrefix,
     ext,
@@ -72,6 +74,9 @@ export function output(config, opts) {
     color,
     minify,
     pretty,
+    outFile,
+    forceMinify,
+    forcePretty,
   }
 
   if (config) {
@@ -113,6 +118,8 @@ function readData(opts) {
     outDir,
     outFile,
     onError,
+    forceMinify,
+    forcePretty,
   } = opts
 
   let configs = null
@@ -130,12 +137,22 @@ function readData(opts) {
       let result = readTpl(config, opts)
       if (result) {
         let filePath = config[outFile]
-        if (filePath && !Path.isAbsolute(filePath)) {
+        if (!filePath) {
+          filePath = path
+        } else if (!Path.isAbsolute(filePath)) {
           filePath = Path.join(outDir, filePath)
         }
+
+        let _opts = {...opts}
+        if (lang.isBoolean(config[forceMinify])) {
+          _opts.minify = config[forceMinify]
+        }
+        if (lang.isBoolean(config[forcePretty])) {
+          _opts.pretty = config[forcePretty]
+        }
         list.push({
-          path: filePath || path,
-          text: compile(result, opts),
+          path: filePath,
+          text: compile(result, _opts),
         })
       }
     } catch (e) {
@@ -156,6 +173,8 @@ function readTpl(config, opts) {
     outFile,
     tplPrefix,
     partialPrefix,
+    forceMinify,
+    forcePretty,
   } = opts
 
   let data = {}
@@ -165,10 +184,15 @@ function readTpl(config, opts) {
   let tpl = null
 
   for (let key in config) {
-    let value = config[key]
+    if (key === forceMinify
+     || key === forcePretty) {
+      continue
+    }
     if (outFile && key === outFile) {
       continue
     }
+
+    let value = config[key]
     if (key === rootTpl) {
       let {
         pathname,
@@ -220,11 +244,9 @@ function compile({
   partials
 }, opts) {
   const {
-    color,
     render,
     minify,
     pretty,
-    ext,
   } = opts
 
   let text = render({

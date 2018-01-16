@@ -5,6 +5,8 @@ console.dir(core.getGlobalData())
 
 module.exports = function(opts){
   return {
+    "__minify": false,
+    // "__pretty": false,
     "__root": "layout.mustache?title=About",
     "__nav": "common/nav.mustache?menus=menus.js",
     "__content": "content/about.mustache",

@@ -8,8 +8,8 @@ setGlobalData(data)
 
 output({
   baseDir: './test',
-  // minify: true,
-  // pretty: true,
+  minify: true,
+  pretty: true,
   // watch: true,
   // color: true,
   print: console.log,

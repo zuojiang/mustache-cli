@@ -1,6 +1,6 @@
 {
   "name": "mustache-cli",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Mustache's CLI interface.",
   "main": "lib/index.js",
   "scripts": {
@@ -49,6 +49,7 @@
     "cli-color": "^1.2.0",
     "commander": "^2.9.0",
     "html-minifier": "^3.5.2",
+    "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "mustache": "^2.3.0",
     "node-watch": "^0.5.4",
