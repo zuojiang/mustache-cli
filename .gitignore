@@ -1,7 +1,15 @@
 node_modules
+*_bak
+*.bak
+package-lock.json
+yarn.lock
 *.log
 .*.swp
+npm-debug.*
 .direcotry
 .DS_Store
 Thumbs.db
 *~
+.svn
+.idea
+.vscode

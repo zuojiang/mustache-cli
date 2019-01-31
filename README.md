@@ -1,13 +1,17 @@
-## mustache-cli
+mustache-cli
+===
 
-### Description
+Description
+---
 
 Mustache's CLI interface.
 
-### Usage
+Usage
+---
+
 ```sh
-$ npm install mustache-cli --global
-$ mustache-cli -h
+npm install mustache-cli --global
+mustache-cli -h
 ```
 
 _./tpl/layout.mustache_
@@ -52,7 +56,7 @@ module.exports = function(opts){
   return {
     __file: 'multi/index.html',
     __root: 'layout.mustache',
-    _tpl: '{{{html}}}',
+    _tpl: '{{{ html }}}',
     title: 'Multi',
     html: function(){
       const page1 = output({
@@ -72,7 +76,7 @@ module.exports = function(opts){
 ```
 
 ```sh
-$ mustache-cli -p --color ./
+mustache-cli -p --color ./
 ```
 
 _./out/index.html_
@@ -112,7 +116,8 @@ _./out/multi/index.html_
 </html>
 ```
 
-### Node
+Node
+---
 
 ```js
 import express from 'express'
@@ -135,36 +140,153 @@ app.use((req, res) => {
 app.listen(3000)
 ```
 
-### API
+API
+---
 
-#### `output(config[, options])`
+### `output(config[, options])`
 
-##### options:
+options:
 
-* `baseDir`: (Default: `.`)
-* `confDir`: (Default: `./conf`)
-* `tplDir`: (Default: `./tpl`)
-* `outDir`: (Default: `./out`)
-* `rootTpl`: (Default: `__root`)
-* `outFile`: (Default: `__file`, Since: _2.2.0+_)
-* `forceMinify`: (Default: `__minify`, Since: _2.3.0+_)
-* `forcePretty`: (Default: `__pretty`, Since: _2.3.0+_)
-* `tplPrefix`: (Default: `__`)
-* `partialPrefix`: (Default: `_`)
-* `ext`: (Default: `html`)
-* `render`: (Default: `mustache.render`)
+* `baseDir`
+
+  (Default: `.`)
+
+  Set the root dir for mustache.
+
+* `confDir`
+
+  (Default: `./conf`)
+
+  Set the config dir, include js or json files.
+
+* `tplDir`
+
+  (Default: `./tpl`)
+
+  Set the template dir, include mustache or html files.
+
+* `outDir`
+
+  (Default: `./out`)
+
+  Set the output dir.
+
+* `rootTpl`
+
+  (Default: `__root`)
+
+  Set the key of a main template file path.
+
+* `outFile`
+
+  (Default: `__file`, Since: _2.2.0+_)
+
+  Set the key of a output file path.
+
+
+* `partialPrefix`
+
+  (Default: `_`)
+
+  Set the prefix, represent a partial.
+
+  ```html
+  // HTML
+  <div>{{>nav}}</div>
+
+  // JSON
+  {
+    _nav: '<nav>...</nav>',
+    ...
+  }
+  ```
+  
+* `tplPrefix`
+
+  (Default: `__`)
+
+  Set the prefix, represent a template file path for a partial.
+
+  ```html
+  // HTML
+  <div>{{>form}}</div>
+
+  // JSON
+  {
+    __form: 'form.mustache',
+    ...
+  }
+  ```
+
+* `forceMinify`
+
+  (Default: `__minify`, Since: _2.3.0+_)
+
+  Set the key of minifier, The possible value is `true` or `false`, for config file.
+
+* `forcePretty`
+
+  (Default: `__pretty`, Since: _2.3.0+_)
+
+  Set the key of pretty, The possible value is `true` or `false`, for config file.
+
+* `ext`
+
+  (Default: `html`)
+
+  Set the extname of output files.
+
+* `render`
+
+  (Default: `mustache.render`)
+
+  Set render function.
+
 * `print`
+
+  Set log output function.
+
 * `onError`
-* `color`: (Default: `false`)
-* `minify`: (Default: `false`)
-* `pretty`: (Default: `false`)
-* `watch`: (Default: `false`)
-* <del>`config`</del>
 
-#### `setGlobalData(data)`
+  The callback is called when an error occurs.
 
-#### `getGlobalData`
+* `color`
 
-### License
+  (Default: `false`)
+
+  Print color text.
+
+* `minify`
+
+  (Default: `false`)
+
+  To minify HTML.
+
+* `pretty`
+
+  (Default: `false`)
+
+  To pretty HTML.
+
+* `watch`
+
+  (Default: `false`)
+
+  To watch working files.
+
+* ~~`config`~~
+
+  (Deprecated)
+
+### `setGlobalData(data)`
+
+  Set default data.
+
+### `getGlobalData()`
+
+  Get default data.
+
+License
+---
 
 MIT
