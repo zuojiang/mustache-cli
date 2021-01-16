@@ -356,7 +356,7 @@ function readFile(path, filter = () => true, opts) {
 
 
 function requireJS(path, opts) {
-  require.cache[path] = null
+  require.cache[path] = undefined;
   const data = require(path)
   if (typeof data === 'function' && data.length > 0) {
     return data(opts)
